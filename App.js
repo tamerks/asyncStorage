@@ -15,6 +15,9 @@ import Login from './src/screens/Login';
 import Google from './src/screens/Google';
 import Info from './src/screens/Info';
 
+import { Provider } from 'react-redux';
+import { store } from './src/redux/config/store'
+
 const firebaseConfig = {
   apiKey: "AIzaSyBz0GW45-m1s2cdHDdQaJGAuj53n1SXpQM",
   authDomain: "fir-7e987.firebaseapp.com",
@@ -32,13 +35,13 @@ const Tab = createBottomTabNavigator();
 
 function TabBar({ navigation }) {
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (!user) {
-        navigation.navigate("Login");
-      }
-    })
-  }, []);
+  // useEffect(() => {
+  //   firebase.auth().onAuthStateChanged((user) => {
+  //     if (!user) {
+  //       navigation.navigate("Login");
+  //     }
+  //   })
+  // }, []);
   return (
 
     <Tab.Navigator
@@ -69,13 +72,16 @@ function TabBar({ navigation }) {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }} >
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="TabBar" component={TabBar} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store = {store()}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='TabBar' screenOptions={{ headerShown: false }} >
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="TabBar" component={TabBar} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
+
   );
 }
 

@@ -2,11 +2,21 @@ import { StyleSheet, Text, View, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+import { useSelector, useDispatch } from 'react-redux';
+import store from '../redux/config/store';
+
 function Info({ route }) {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
-    const [age, setAge] = useState("");
+    const [age, setAge] = useState("");   
+    
+    const {paramData} = route.params;
+    const {paramSecondData} = route.params;
 
+    const city = (useSelector((state) => state.cityReducer.cityName));
+    const university = (useSelector((state) => state.universityReducer.universityName));
+
+ 
     useEffect(() => {
         getData();
     });
@@ -19,7 +29,7 @@ function Info({ route }) {
                         let user = JSON.parse(value);
                         setName(user.Name);
                         setSurname(user.Surname);
-                        setAge(user.Age);
+                        setAge(user.Age);                        
                     }
                 })
         } catch (error) {
@@ -47,6 +57,11 @@ function Info({ route }) {
                 value={age}
                 editable={false}
             />
+            {paramData && paramSecondData?(<><Text> {JSON.stringify(paramData)} </Text>
+            <Text> {JSON.stringify(paramSecondData)} </Text></>):<Text>no data</Text>}
+
+            <Text>{city}</Text>
+            <Text> {university} </Text>
         </View>
     )
 }

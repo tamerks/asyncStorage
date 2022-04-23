@@ -3,23 +3,47 @@ import React, { useEffect, useState } from 'react'
 import firebase from 'firebase/compat/app'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {
+  changeCity,  
+} from '../redux/citySlice';
+
+import {
+  changeUniversity
+} from '../redux/universitySlice'
+
+import { useDispatch, useSelector } from 'react-redux';
+
 function Input({ navigation }) {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-  const [age, setAge] = useState(""); 
- 
+  const [age, setAge] = useState("");
+  const [routeData, setRouteData] = useState("");
+  const [routeSecondData, setRouteSecondData] = useState("");
+
+  const city = useSelector((state) => state.cityReducer.cityName);
+  const university = useSelector((state) => state.universityReducer.universityName);
+
+  const dispatch = useDispatch();
+
+  const handleCityChange = (value) => {
+    dispatch(changeCity(value));
+  };
+  const handleUniversityChange = (value) => {
+    dispatch(changeUniversity(value));
+  };
+
+  
   const setDataAsync = async () => {
     try {
-      var user = {
+      const user = {
         Name: name,
         Surname: surname,
         Age: age
       }
       await AsyncStorage.setItem('UserData', JSON.stringify(user));
-      navigation.navigate('Info',{
-        paramName: name,
-        paramSurname: surname,
-        paramAge: age
+      navigation.navigate('Info', {        
+        paramData: routeData,
+        paramSecondData: routeSecondData
       });
     } catch (error) {
       console.warn(error);
@@ -52,6 +76,24 @@ function Input({ navigation }) {
           placeholder="age"
           onChangeText={(value) => setAge(value)}
         />
+        <TextInput
+          placeholder="param"
+          onChangeText={(value) => setRouteData(value)}
+        />
+        <TextInput
+          placeholder="param2"
+          onChangeText={(value) => setRouteSecondData(value)}
+        />
+        <TextInput
+          placeholder="city"
+          value={city}
+          onChangeText={handleCityChange}
+        />  
+        <TextInput
+          placeholder="university"
+          value={university}
+          onChangeText={handleUniversityChange}
+        />           
       </View>
       <TouchableOpacity
         style={styles.saveBtn}
